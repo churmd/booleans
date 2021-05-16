@@ -13,7 +13,18 @@ func TestNot(t *testing.T) {
 	assert.True(t, ops.Not(false))
 }
 
-func TestAnd(t *testing.T) {
-	assert.True(t, ops.And(true, true))
+func TestAndTrueVarients(t *testing.T) {
+	trueOptions := [][]bool{{}, {true}, {true, true}, {true, true, true}}
+	
+	for _, bools := range trueOptions {
+		assert.True(t, ops.And(bools...))
+	}
 }
-  
+
+func TestAndFalseVarients(t *testing.T) {
+	trueOptions := [][]bool{ {false}, {true, false}, {false, true}, {true, true, false}}
+	
+	for _, bools := range trueOptions {
+		assert.False(t, ops.And(bools...))
+	}
+}

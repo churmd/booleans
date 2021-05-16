@@ -22,9 +22,25 @@ func TestAndTrueVarients(t *testing.T) {
 }
 
 func TestAndFalseVarients(t *testing.T) {
-	trueOptions := [][]bool{ {false}, {true, false}, {false, true}, {true, true, false}}
+	falseOptions := [][]bool{ {false}, {true, false}, {false, true}, {true, true, false}}
+	
+	for _, bools := range falseOptions {
+		assert.False(t, ops.And(bools...))
+	}
+}
+
+func TestOrTrueVarients(t *testing.T) {
+	trueOptions := [][]bool{ {true}, {true, false}, {false, true}, {true, true, false}, {false, false, true}}
 	
 	for _, bools := range trueOptions {
-		assert.False(t, ops.And(bools...))
+		assert.True(t, ops.Or(bools...))
+	}
+}
+
+func TestOrFalseVarients(t *testing.T) {
+	falseOptions := [][]bool{ {}, {false}, {false, false}, {false, false}}
+	
+	for _, bools := range falseOptions {
+		assert.False(t, ops.Or(bools...))
 	}
 }

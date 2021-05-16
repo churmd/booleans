@@ -12,3 +12,13 @@ func And(xs... bool) bool {
 	}
 	return true
 }
+
+func Or(xs... bool) bool {
+	for _, x := range xs {
+		if x {
+			return true
+		}
+	}
+
+	return false
+}

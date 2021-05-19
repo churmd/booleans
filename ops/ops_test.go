@@ -3,7 +3,7 @@ package ops_test
 import (
 	"testing"
 
-	ops "github.com/churmd/booleans"
+	ops "github.com/churmd/booleans/ops"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -62,11 +62,11 @@ func TestXorTrueVarients(t *testing.T) {
 
 func TestXorFalseVarients(t *testing.T) {
 	falseOptions := [][]bool{
-		{}, 
-		{false}, 
-		{false, false}, 
-		{true, true}, 
-		{true, true, false}, 
+		{},
+		{false},
+		{false, false},
+		{true, true},
+		{true, true, false},
 		{false, true, true},
 		{true, true, false, false},
 	}

@@ -1,8 +1,8 @@
 format:
-	go fmt .
+	go fmt ./...
 
 test:
-	go test .
+	go test ./...
 
 coverage:
 	go test -coverprofile=coverage.out

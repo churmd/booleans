@@ -11,3 +11,13 @@ func And(ps... Predicate) bool {
 
 	return true
 }
+
+func Or(ps... Predicate) bool {
+	for _, p := range ps {
+		if p() {
+			return true
+		}
+	}
+
+	return false
+}

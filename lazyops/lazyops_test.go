@@ -56,3 +56,30 @@ func TestAndFalseVarients(t *testing.T) {
 		assert.False(t, lazyops.And(bools...))
 	}
 }
+
+func TestOrTrueVarients(t *testing.T) {
+	trueOptions := [][]lazyops.Predicate{
+		{alwaysTrue}, 
+		{alwaysTrue, alwaysFalse}, 
+		{alwaysFalse, alwaysTrue}, 
+		{alwaysTrue, alwaysTrue, alwaysFalse}, 
+		{alwaysFalse, alwaysFalse, alwaysTrue},
+	}
+
+	for _, bools := range trueOptions {
+		assert.True(t, lazyops.Or(bools...))
+	}
+}
+
+func TestOrFalseVarients(t *testing.T) {
+	falseOptions := [][]lazyops.Predicate{
+		{}, 
+		{alwaysFalse}, 
+		{alwaysFalse, alwaysFalse}, 
+		{alwaysFalse, alwaysFalse, alwaysFalse},
+	}
+
+	for _, bools := range falseOptions {
+		assert.False(t, lazyops.Or(bools...))
+	}
+}

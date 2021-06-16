@@ -38,7 +38,7 @@ func TestOrTrueVarients(t *testing.T) {
 }
 
 func TestOrFalseVarients(t *testing.T) {
-	falseOptions := [][]bool{{}, {false}, {false, false}, {false, false}}
+	falseOptions := [][]bool{{}, {false}, {false, false}, {false, false, false}}
 
 	for _, bools := range falseOptions {
 		assert.False(t, ops.Or(bools...))

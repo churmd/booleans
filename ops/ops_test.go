@@ -17,7 +17,7 @@ func TestAndTrueVarients(t *testing.T) {
 	trueOptions := [][]bool{{}, {true}, {true, true}, {true, true, true}}
 
 	for _, bools := range trueOptions {
-		assert.True(t, ops.And(bools...))
+		assert.True(t, ops.And(bools...), "And failed for case %+v, expected true", bools)
 	}
 }
 
@@ -25,7 +25,7 @@ func TestAndFalseVarients(t *testing.T) {
 	falseOptions := [][]bool{{false}, {true, false}, {false, true}, {true, true, false}}
 
 	for _, bools := range falseOptions {
-		assert.False(t, ops.And(bools...))
+		assert.False(t, ops.And(bools...), "And failed for case %+v, expected false", bools)
 	}
 }
 
@@ -33,7 +33,7 @@ func TestOrTrueVarients(t *testing.T) {
 	trueOptions := [][]bool{{true}, {true, false}, {false, true}, {true, true, false}, {false, false, true}}
 
 	for _, bools := range trueOptions {
-		assert.True(t, ops.Or(bools...))
+		assert.True(t, ops.Or(bools...), "Or failed for case %+v, expected true", bools)
 	}
 }
 
@@ -41,7 +41,7 @@ func TestOrFalseVarients(t *testing.T) {
 	falseOptions := [][]bool{{}, {false}, {false, false}, {false, false, false}}
 
 	for _, bools := range falseOptions {
-		assert.False(t, ops.Or(bools...))
+		assert.False(t, ops.Or(bools...), "Or failed for case %+v, expected false", bools)
 	}
 }
 

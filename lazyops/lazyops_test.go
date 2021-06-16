@@ -12,20 +12,33 @@ func alwaysTrue() bool { return true }
 func alwaysFalse() bool { return false }
 
 func TestPredicateConstruction(t *testing.T) {
-	var a lazyops.Predicate = func() bool {return true}
-	var b lazyops.Predicate = func() bool {
+	var truePred lazyops.Predicate = func() bool {
 		x := 2
 		y := 3
 		z := 5
 		return x + y == z
 	}
 
-	assert.True(t, a())
-	assert.True(t, b())
+	assert.True(t, alwaysTrue())
+	assert.True(t, truePred())
+
+	var falsePred lazyops.Predicate = func() bool {
+		x := 2
+		y := 3
+		z := 5
+		return x + y != z
+	}
+
+	assert.False(t, alwaysFalse())
+	assert.False(t, falsePred())
 }
 
 func TestAndTrueVarients(t *testing.T) {
-	trueOptions := [][]lazyops.Predicate{{}, {alwaysTrue}}
+	trueOptions := [][]lazyops.Predicate{
+		{}, 
+		{alwaysTrue}, 
+		{alwaysTrue, alwaysTrue, alwaysTrue},
+	}
 
 	for _, bools := range trueOptions {
 		assert.True(t, lazyops.And(bools...))
@@ -33,7 +46,11 @@ func TestAndTrueVarients(t *testing.T) {
 }
 
 func TestAndFalseVarients(t *testing.T) {
-	falseOptions := [][]lazyops.Predicate{{alwaysFalse}}
+	falseOptions := [][]lazyops.Predicate{
+		{alwaysFalse}, 
+		{alwaysFalse, alwaysFalse}, 
+		{alwaysTrue, alwaysTrue, alwaysFalse},
+	}
 
 	for _, bools := range falseOptions {
 		assert.False(t, lazyops.And(bools...))

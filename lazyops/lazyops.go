@@ -3,41 +3,47 @@ package lazyops
 type Predicate func() bool
 
 func Not(p Predicate) Predicate {
-	return func () bool {
+	return func() bool {
 		return !p()
 	}
 }
 
-func And(ps ...Predicate) bool {
-	for _, p := range ps {
-		if !p() {
-			return false
+func And(ps ...Predicate) Predicate {
+	return func() bool {
+		for _, p := range ps {
+			if !p() {
+				return false
+			}
 		}
-	}
 
-	return true
+		return true
+	}
 }
 
-func Or(ps ...Predicate) bool {
-	for _, p := range ps {
-		if p() {
-			return true
+func Or(ps ...Predicate) Predicate {
+	return func() bool {
+		for _, p := range ps {
+			if p() {
+				return true
+			}
 		}
-	}
 
-	return false
+		return false
+	}
 }
 
-func Xor(ps ...Predicate) bool {
-	acc := false
+func Xor(ps ...Predicate) Predicate {
+	return func() bool {
+		acc := false
 
-	for _, p := range ps {
-		if acc == p() {
-			acc = false
-		} else {
-			acc = true
+		for _, p := range ps {
+			if acc == p() {
+				acc = false
+			} else {
+				acc = true
+			}
 		}
-	}
 
-	return acc
+		return acc
+	}
 }

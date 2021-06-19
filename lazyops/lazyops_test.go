@@ -33,6 +33,14 @@ func TestPredicateConstruction(t *testing.T) {
 	assert.False(t, falsePred())
 }
 
+func TestNotTrueVarient(t *testing.T) {
+	assert.True(t, lazyops.Not(alwaysFalse)(), "Lazy Not failed expcted true")
+}
+
+func TestNotFalseVarient(t *testing.T) {
+	assert.False(t, lazyops.Not(alwaysTrue)(), "Lazy Not failed expcted false")
+}
+
 func TestAndTrueVarients(t *testing.T) {
 	trueOptions := [][]lazyops.Predicate{
 		{},
@@ -41,7 +49,7 @@ func TestAndTrueVarients(t *testing.T) {
 	}
 
 	for _, bools := range trueOptions {
-		assert.True(t, lazyops.And(bools...), "Lazy And failed for case %+v, expected true", bools)
+		assert.True(t, lazyops.And(bools...)(), "Lazy And failed for case %+v, expected true", bools)
 	}
 }
 
@@ -53,7 +61,7 @@ func TestAndFalseVarients(t *testing.T) {
 	}
 
 	for _, bools := range falseOptions {
-		assert.False(t, lazyops.And(bools...), "Lazy And failed for case %+v, expected false", bools)
+		assert.False(t, lazyops.And(bools...)(), "Lazy And failed for case %+v, expected false", bools)
 	}
 }
 
@@ -67,7 +75,7 @@ func TestOrTrueVarients(t *testing.T) {
 	}
 
 	for _, bools := range trueOptions {
-		assert.True(t, lazyops.Or(bools...), "Lazy Or failed for case %+v, expected true", bools)
+		assert.True(t, lazyops.Or(bools...)(), "Lazy Or failed for case %+v, expected true", bools)
 	}
 }
 
@@ -80,7 +88,7 @@ func TestOrFalseVarients(t *testing.T) {
 	}
 
 	for _, bools := range falseOptions {
-		assert.False(t, lazyops.Or(bools...), "Lazy Or failed for case %+v, expected false", bools)
+		assert.False(t, lazyops.Or(bools...)(), "Lazy Or failed for case %+v, expected false", bools)
 	}
 }
 
@@ -95,7 +103,7 @@ func TestXorTrueVarients(t *testing.T) {
 	}
 
 	for _, bools := range trueOptions {
-		assert.True(t, lazyops.Xor(bools...), "Lazy Xor failed for case %+v, expected true", bools)
+		assert.True(t, lazyops.Xor(bools...)(), "Lazy Xor failed for case %+v, expected true", bools)
 	}
 }
 
@@ -111,6 +119,23 @@ func TestXorFalseVarients(t *testing.T) {
 	}
 
 	for _, bools := range falseOptions {
-		assert.False(t, lazyops.Xor(bools...), "Lazy Xor failed for case %+v, expected false", bools)
+		assert.False(t, lazyops.Xor(bools...)(), "Lazy Xor failed for case %+v, expected false", bools)
 	}
+}
+
+func TestPredicatesOnlyEvalWhenNeeded(t *testing.T) {
+	shouldBeTrue := true
+	shouldNotBeRan := func() bool {
+		shouldBeTrue = false
+		return true
+	}
+
+	_ = lazyops.Not(shouldNotBeRan)
+	assert.True(t, shouldBeTrue, "Lazy Not ran predicate when it did not need to")
+
+	assert.False(t, lazyops.And(alwaysFalse, shouldNotBeRan)(), "Lazy And failed should be false")
+	assert.True(t, shouldBeTrue, "Lazy And ran predicate when it did not need to")
+
+	assert.True(t, lazyops.Or(alwaysTrue, shouldNotBeRan)(), "Lazy Or failed should be true")
+	assert.True(t, shouldBeTrue, "Lazy Or ran predicate when it did not need to")
 }

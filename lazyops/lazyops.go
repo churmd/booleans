@@ -2,6 +2,12 @@ package lazyops
 
 type Predicate func() bool
 
+func Not(p Predicate) Predicate {
+	return func () bool {
+		return !p()
+	}
+}
+
 func And(ps ...Predicate) bool {
 	for _, p := range ps {
 		if !p() {

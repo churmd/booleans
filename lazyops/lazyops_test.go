@@ -33,6 +33,14 @@ func TestPredicateConstruction(t *testing.T) {
 	assert.False(t, falsePred())
 }
 
+func TestNotTrueVarient(t *testing.T) {
+	assert.True(t, lazyops.Not(alwaysFalse)(), "Lazy Not failed expcted true")
+}
+
+func TestNotFalseVarient(t *testing.T) {
+	assert.False(t, lazyops.Not(alwaysTrue)(), "Lazy Not failed expcted false")
+}
+
 func TestAndTrueVarients(t *testing.T) {
 	trueOptions := [][]lazyops.Predicate{
 		{},

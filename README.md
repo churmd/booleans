@@ -1,10 +1,11 @@
 # Boolean Algrebra
 
-Set of basic boolean operations to make code more human readable.
+Set of basic boolean operations to make code more human readable. No more hidden !
 
-Ever wasted 30 minutes of your life trying to understand how a function is working? Only to go through it with someone else and realise you have simply been missing the negation of an if condition `if !someCoolFunc() { ... }`. Or come across a complex series of nested and's/or's, tried to refactor them out into separate conditions only to end up with failing tests and less of an understanding then when you started?
+They come in two forms:
 
-This library helps to ease these pains by providing named versions of the basic boolean operations so they are harder to gloss over and easier to read.
+-   Standard operations which take in and return booleans
+-   Lazy operations which take in and return predicates (functions that return a boolean)
 
 ## Examples
 
@@ -14,14 +15,16 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 
-	ops "github.com/churmd/booleans/ops"
+	"github.com/churmd/booleans/lazyops"
+	"github.com/churmd/booleans/ops"
 )
 
-func alwaysTrue() bool  { return true }
-func alwaysFalse() bool { return false }
-
 func main() {
+
+	// Standard bool operations
+
 	if ops.Not(false) {
 		fmt.Println("Not example")
 	}
@@ -40,5 +43,40 @@ func main() {
 	if ops.And(len(exampleString) == 13, ops.Or(containsHello, containsBye)) {
 		fmt.Println("Combining operations example")
 	}
+
+	// Lazy bool operations
+
+	if lazyops.Not(lazyops.And(alwaysFalse, neverEnding))() {
+		fmt.Println("Lazy And short circuit example")
+	}
+
+	if lazyops.Or(alwaysTrue, neverEnding)() {
+		fmt.Println("Lazy And short circuit example")
+	}
+
+	if lazyops.Not(lazyops.Xor(alwaysTrue, alwaysTrue))() {
+		fmt.Println("Lazy Not / Xor cannot be short circuited but are included to make chaining calls easy")
+	}
+}
+
+func alwaysTrue() bool  { return true }
+
+func alwaysFalse() bool { return false }
+
+func neverEnding() bool {
+	for i := 0; i < 1000; i++ {
+		fmt.Println("never ending work")
+		time.Sleep(2 * time.Second)
+	}
+
+	return true
 }
 ```
+
+## Should you use this?
+
+Probably not. Using the early return pattern can be applied in most cases where you would want to consider using something like this, rather than setting up all the code beforehand and then only needing some of it.
+
+This little project was initially created becuase I glossed over too many `!` in if statements one day, really wanted to have a `not` keyword and then came across another if statement that chained 7 bool results together with `&&`'s.
+
+The lazy versions were dreamt up later for a bit of fun and to mimic the short circuit feature that `&& / ||` have, which some code relies on.
